@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Results
+{% endblock %}
+
+{% block main %}
+
+
+    {% for row in rows %}
+        <img src="{{ row['picture'] }}">
+    {% endfor %}
+
+
+{% endblock %}

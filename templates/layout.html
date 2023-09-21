@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- documentation at http://getbootstrap.com/docs/4.1/, alternative themes at https://bootswatch.com/ -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- https://favicon.io/emoji-favicons/dog/ -->
+        <link href="/static/favicon.ico" rel="icon">
+
+        <link href="/static/styles.css" rel="stylesheet">
+
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <title>Find My Dog: {% block title %}{% endblock %}</title>
+
+    </head>
+
+    <body>
+
+        <nav class="navbar navbar-default">
+            <div class="container-fluid menu">
+                <div class="navbar-header">
+                    <strong><a class="navbar-brand" href="#">Find My Dog</a></strong>
+                </div>
+            {% if session.user_id %}
+                <ul class="nav navbar-nav">
+                    <li><a href="/"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                    <li><a href="/adddog"><span class="glyphicon glyphicon-plus-sign"></span> Add Dog</a></li>
+                    <li><a href="/mydogs">MyDogs</a></li>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
+                </ul>
+                {% else %}
+                <ul class="nav navbar-nav">
+                    <li><a href="/"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                    <li><a href="/adddog"><span class="glyphicon glyphicon-plus-sign"></span> Add Dog</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/register"><span class="glyphicon glyphicon-user"></span> Register</a></li>
+                    <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Log In</a></li>
+                </ul>
+                {% endif %}
+            </div>
+        </nav>
+
+        {% if get_flashed_messages() %}
+            <header>
+                <div class="alert alert-success border text-center" role="success">
+                    <a href="#" class="close" data-dismiss="success" aria-label="close">&times;</a>
+                    {{ get_flashed_messages() | join(" ") }}
+                </div>
+            </header>
+        {% endif %}
+
+        <main class="container p-5">
+            {% block main %}{% endblock %}
+        </main>
+
+        <footer class="small text-center text-muted">
+             Website created by Mihail Shaklev.
+        </footer>
+
+    </body>
+
+</html>

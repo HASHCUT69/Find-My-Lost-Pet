@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+My Dog Adds
+{% endblock %}
+
+{% block main %}
+<form class="form-inline" action="/delete" method="POST" onsubmit="return confirm('Delete dog add?');">
+    <div class="form-group">
+        <select autocomplete="off" autofocus class="form-control" name="dogId" type="number">
+            <option disabled selected>ID</option>
+            {% for row in rows %}
+            <option>{{ row['id_dog'] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button class="btn btn-danger" type="submit">Delete Dog <span class="glyphicon glyphicon-trash"></span></button>
+</form>
+&nbsp;
+{% if rows %}
+
+{% for row in rows %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="thumbnail">
+            <img src="{{ '/static/pics/'+row['picture'] }}" alt="dog image">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="caption">
+            <ul class="list-group">
+                <li class="list-group-item">Dog ID {{ row['id_dog'] }}</li>
+                <li class="list-group-item">Name: {{ row['dog_name'] }}</li>
+                <li class="list-group-item">Status: {{ row['status'] }}</li>
+                <li class="list-group-item">Breed: {{ row['breed'] }}</li>
+                <li class="list-group-item">Color: {{ row['color'] }}</li>
+                <li class="list-group-item">Location: {{ row['location'] }}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% else %}
+<h2>You have no dog adds</h2>
+{% endif %}
+
+&nbsp;
+{% endblock %}

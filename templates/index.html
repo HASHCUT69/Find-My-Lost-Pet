@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Dogs List
+{% endblock %}
+
+{% block main %}
+<h3>Search for a lost dog</h3>
+<form class="form-inline" action="/" method="POST">
+    <div class="form-group">
+        <input autocomplete="off" autofocus class="form-control" name="name" placeholder="Dog name" type="text">
+    </div>
+    <div class="form-group">
+        <select autocomplete="off" autofocus class="form-control" name="status" type="text">
+            <option disabled selected>Status</option>
+            <option>Lost</option>
+            <option>Found</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input class="form-control" name="location" placeholder="Location" type="text">
+    </div>
+    <div class="form-group">
+        <select autocomplete="off" autofocus class="form-control" name="breed" type="text">
+            <option disabled selected>Breed</option>
+            {% for breed in breeds %}
+            <option>{{ breed['breed'] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <select autocomplete="off" autofocus class="form-control" name="color" type="text">
+            <option disabled selected>Color</option>
+            {% for color in colors %}
+            <option>{{ color['color'] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button class="btn btn-success" type="submit">Search <span class="glyphicon glyphicon-search"></span></button>
+</form>
+&nbsp;
+{% if errorMsg %}
+<div class="container">
+    <div class="alert alert-danger alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{ errorMsg }}
+    </div>
+</div>
+{% endif %}
+&nbsp;
+{% if rows %}
+
+{% for row in rows %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="thumbnail">
+            <img src="{{ '/static/pics/'+row['picture'] }}" alt="dog image">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="caption">
+            <ul class="list-group">
+                <li class="list-group-item">Username: {{ row['username'] }}</li>
+                <li class="list-group-item">Dog Name: {{ row['dog_name'] }}</li>
+                <li class="list-group-item">Status: {{ row['status'] }}</li>
+                <li class="list-group-item">Breed: {{ row['breed'] }}</li>
+                <li class="list-group-item">Color: {{ row['color'] }}</li>
+                <li class="list-group-item">Location: {{ row['location'] }}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <a href="mailto:{{ row['email'] }}"><button class="btn btn-success">Message {{ row['username'] }}</button></a>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}

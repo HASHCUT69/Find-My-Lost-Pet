@@ -1,0 +1,43 @@
+.error
+{
+    padding: 35px;
+}
+
+.menu
+{
+    /* set background color of the menu */
+    background-color:#b8e4a1;
+
+    /* set padding of the menu */
+    padding:15px;
+
+    /* font size of the menu */
+    font-size:16px;
+}
+
+main .form-control
+{
+    /* center form controls */
+    display: inline-block;
+
+    /* override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+nav .navbar-brand
+{
+    /* size for brand */
+    font-size: xx-large;
+}
+
+main
+{
+    /* center contents */
+    text-align: center;
+}
+
+img
+{
+    height: 50%;
+    width: 50%;
+}
