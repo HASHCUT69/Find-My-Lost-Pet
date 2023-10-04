@@ -51,45 +51,49 @@ def index():
         color = request.form.get("color")
 
         # Get existing colors and breeds from the database
+        locations = db.execute(
+            "SELECT DISTINCT location FROM dogs ORDER BY location")
         breeds = db.execute("SELECT DISTINCT breed FROM dogs ORDER BY breed")
         colors = db.execute("SELECT DISTINCT color FROM dogs ORDER BY color")
 
         # Check if status is provided
         if not status:
             errorMsg = "Must provide status!"
-            return render_template("index.html", errorMsg=errorMsg, breeds=breeds, colors=colors)
+            return render_template("index.html", errorMsg=errorMsg, breeds=breeds, colors=colors, locations=locations)
 
         # Check if location is provided
         if not location:
             errorMsg = "Must provide location!"
-            return render_template("index.html", errorMsg=errorMsg, breeds=breeds, colors=colors)
+            return render_template("index.html", errorMsg=errorMsg, breeds=breeds, colors=colors, locations=locations)
 
         # Check if breed is provided
-        if not breed:
-            errorMsg = "Must provide breed!"
-            return render_template("index.html", errorMsg=errorMsg, breeds=breeds, colors=colors)
+        # if not breed:
+        #     errorMsg = "Must provide breed!"
+        #     return render_template("index.html", errorMsg=errorMsg, breeds=breeds, colors=colors)
 
-        # Check if color is provided
-        if not color:
-            errorMsg = "Must provide color!"
-            return render_template("index.html", errorMsg=errorMsg, breeds=breeds, colors=colors)
+        # # Check if color is provided
+        # if not color:
+        #     errorMsg = "Must provide color!"
+        #     return render_template("index.html", errorMsg=errorMsg, breeds=breeds, colors=colors)
 
         # Search for the lost/found dog in the database
-        rows = db.execute("SELECT username, email, dog_name, status, location, picture, breed, color FROM (SELECT * FROM dogs WHERE status=:status AND location=:location AND breed=:breed AND color=:color) JOIN users ON id = id_user",
+        rows = db.execute("SELECT username, email, dog_name, status, location, picture, breed, color FROM dogs JOIN users ON dogs.id_user = users.id WHERE status = :status AND location = :location AND (:breed IS NULL OR breed = :breed) AND (:color IS NULL OR color = :color);",
                           status=status, location=location, breed=breed, color=color)
         counter = 0
 
         # Return result and load the existing colors and breeds in select menus in the search form
-        return render_template("index.html", rows=rows, breeds=breeds, colors=colors, counter=counter)
+        return render_template("index.html", rows=rows, breeds=breeds, colors=colors, locations=locations, counter=counter)
 
     else:
 
         # Get existing colors and breeds from the database
         breeds = db.execute("SELECT DISTINCT breed FROM dogs ORDER BY breed")
         colors = db.execute("SELECT DISTINCT color FROM dogs ORDER BY color")
-
+        locations = db.execute(
+            "SELECT DISTINCT location FROM dogs ORDER BY location")
+        breeds = db.execute("SELECT DISTINCT breed FROM dogs ORDER BY breed")
         # Load the existing colors and breeds in select menus in the search form
-        return render_template("index.html", breeds=breeds, colors=colors)
+        return render_template("index.html", breeds=breeds, colors=colors, locations=locations)
 
 
 @app.route("/mydogs")
@@ -134,8 +138,9 @@ def adddog():
 
         # Check if breed is given
         if not breed:
-            errorMsg = "Must provide breed!"
-            return render_template("adddog.html", errorMsg=errorMsg)
+            # errorMsg = "Must provide breed!"
+            # return render_template("adddog.html", errorMsg=errorMsg)
+            breed = "NA"
 
         # Check if color is given
         if not color:
@@ -202,9 +207,16 @@ def register():
         rows = db.execute("SELECT * FROM users WHERE username= :username",
                           username=request.form.get("username"))
 
+        emailRows = db.execute("SELECT * FROM users WHERE email= :email",
+                               email=request.form.get("email"))
+
         # Check if username is taken
         if len(rows) != 0:
             errorMsg = "Username already taken!"
+            return render_template("register.html", errorMsg=errorMsg)
+        # Check if username is taken
+        if len(emailRows) != 0:
+            errorMsg = "Email already used!"
             return render_template("register.html", errorMsg=errorMsg)
 
         # Check if passwords match

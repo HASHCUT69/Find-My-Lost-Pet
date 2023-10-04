@@ -7,39 +7,39 @@ Add Dog
 {% block main %}
 <h3>Add a lost / found dog</h3>
 <form action="/adddog" method="POST" enctype="multipart/form-data">
-        <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="name" placeholder="Dog name" type="text">
-        </div>
-        <div class="form-group">
-            <select autocomplete="off" autofocus class="form-control" name="status" type="text">
-                <option disabled selected>Status</option>
-                <option>Lost</option>
-                <option>Found</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <input class="form-control" name="location" placeholder="Location" type="text">
-        </div>
-        <div class="form-group">
-            <input class="form-control" name="breed" placeholder="Breed" type="text">
-        </div>
-        <div class="form-group">
-            <input class="form-control" name="color" placeholder="Color" type="text">
-        </div>
-        <div class="form-group">
-            <!--<input class="form-control" name="pic" type="text" placeholder="Picture">-->
-            <input autocomplete="off" autofocus class="form-control" name="pic" type="file" accept="image/*">
-        </div>
-        <button class="btn btn-success" type="submit">Submit</button>
+    <div class="form-group">
+        <input autocomplete="off" autofocus class="form-control" name="name" placeholder="Dog name" type="text">
+    </div>
+    <div class="form-group">
+        <select autocomplete="off" autofocus class="form-control" name="status" type="text">
+            <option disabled selected>Status</option>
+            <option>Lost</option>
+            <option>Found</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input class="form-control" name="location" placeholder="Location" type="text">
+    </div>
+    <div class="form-group">
+        <input class="form-control" name="breed" placeholder="Breed(Optional)" type="text">
+    </div>
+    <div class="form-group">
+        <input class="form-control" name="color" placeholder="Color" type="text">
+    </div>
+    <div class="form-group">
+        <!--<input class="form-control" name="pic" type="text" placeholder="Picture">-->
+        <input autocomplete="off" autofocus class="form-control" name="pic" type="file" accept="image/*">
+    </div>
+    <button class="btn btn-success" type="submit">Submit</button>
 </form>
 &nbsp;
-    {% if errorMsg %}
-    <div class="container">
-        <div class="alert alert-danger alert-dismissible">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            {{ errorMsg }}
-        </div>
+{% if errorMsg %}
+<div class="container">
+    <div class="alert alert-danger alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{ errorMsg }}
     </div>
-    {% endif %}
+</div>
+{% endif %}
 &nbsp;
 {% endblock %}

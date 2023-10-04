@@ -18,7 +18,13 @@ Dogs List
         </select>
     </div>
     <div class="form-group">
-        <input class="form-control" name="location" placeholder="Location" type="text">
+        <!-- <input class="form-control" name="location" placeholder="Location" type="text"> -->
+        <select autocomplete="off" autofocus class="form-control" name="location" type="text">
+            <option disabled selected>Location</option>
+            {% for location in locations %}
+            <option>{{ location['location'] }}</option>
+            {% endfor %}
+        </select>
     </div>
     <div class="form-group">
         <select autocomplete="off" autofocus class="form-control" name="breed" type="text">
