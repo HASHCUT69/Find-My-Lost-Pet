@@ -1,4 +1,7 @@
+import smtplib
+import random
 import os
+import time
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_session import Session
@@ -30,7 +33,7 @@ def after_request(response):
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
-app.config["UPLOAD_FOLDER"] = "D:/sande/Desktop/New folder (2)/lost_and_found_dogs_website/static/pics"
+app.config["UPLOAD_FOLDER"] = "C:/Users/saiki/Desktop/LostPet/Find-My-Lost-Pet/static/pics"
 app.config["MAX_CONTENT_PATH"] = 5000000
 
 Session(app)
@@ -209,7 +212,7 @@ def register():
 
         emailRows = db.execute("SELECT * FROM users WHERE email= :email",
                                email=request.form.get("email"))
-
+        
         # Check if username is taken
         if len(rows) != 0:
             errorMsg = "Username already taken!"
@@ -350,6 +353,86 @@ def dashboard():
             "SELECT username FROM users WHERE id=:idUser", idUser=user)
         username = row[0]["username"]
         return render_template("dashboard.html", username=username)
+
+@app.route("/getmail", methods=["GET", "POST"])
+def getmail():
+    if request.method == "POST":
+       email = request.form.get("email")
+        # Find user in the db by id
+       row1 = db.execute("SELECT * FROM users WHERE email=:email", email=email)
+       if(len(row1)==0):
+            errorMsg = "Email address not found!"
+            return render_template("getmail.html", errorMsg=errorMsg)
+       return redirect("/forgotpassword")
+    else:
+        return render_template("getmail.html") 
+
+
+@app.route("/forgotpassword", methods=["GET", "POST"])
+def forgotpassword():
+    """ Edit username and password """
+
+    if request.method == "POST":
+        # Find user in the db by id
+        
+        row = db.execute("SELECT * FROM users WHERE email=:email", email="saikiransk6342@gmail.com")  
+        def generate_otp():
+            return str(random.randint(100000, 999999))
+
+        sender_email = "lostpetconnect886@gmail.com"
+        sender_password = "woxzsrgqyduderyo"
+
+        try:
+            smtp_server = smtplib.SMTP("smtp.gmail.com", 587)
+            smtp_server.starttls()
+            smtp_server.login(sender_email, sender_password)
+
+            recipient_email = "saikiransk6342@gmail.com"
+            otp = "891534"
+
+            subject = "Your OTP Code"
+            body = f"Your OTP code is: {otp}"
+
+            message = f"Subject: {subject}\n\n{body}"
+
+            smtp_server.sendmail(sender_email, recipient_email, message)
+            print("OTP sent successfully!")
+            smtp_server.quit()
+        except Exception as e:
+            print(f"Failed to send OTP: {e}")        
+
+
+
+
+        username = row[0]["username"]
+        oldPassword = row[0]["hash"]
+        newPassword = request.form.get("newPassword")
+        confirmation = request.form.get("confirmation")
+        otpEntered=request.form.get("otp")
+
+        # Check if the user wants to change his password as well
+        if  not newPassword and not confirmation:
+            return redirect("/forgotpassword")
+        else:
+
+            # Make sure all password fields are filled
+            if str(otp)!=str(otpEntered):
+                errorMsg = "OTP Incorrect !!!"+otp+"   "+otpEntered
+                return render_template("forgotpassword.html", errorMsg=errorMsg)
+            if not newPassword:
+                errorMsg = "Must provide  password!"
+                return render_template("forgotpassword.html", errorMsg=errorMsg)
+            if not confirmation or newPassword != confirmation:
+                errorMsg = "Passwords mismatch!!!"
+                return render_template("forgotpassword.html", errorMsg=errorMsg)
+            # Insert the new hashed password in the table
+            db.execute("UPDATE users SET hash=:hashP WHERE email=:email",
+                       hashP=generate_password_hash(newPassword), email="saikiransk6342@gmail.com")
+            return redirect("/login")
+
+    else:
+        
+        return render_template("forgotpassword.html")
 
 
 if __name__ == '__main__':
